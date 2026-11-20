@@ -1,0 +1,791 @@
+{
+  "themeIndex": "smartphone",
+  "params": [
+    {
+      "name": "PhoneModel",
+      "category": {
+        "russian": "📱 Модель и Корпус",
+        "english": "📱 Phone Model & Chassis",
+        "tchinese": "📱 Phone Model & Chassis"
+      },
+      "desc": {
+        "russian": "Стиль и модель устройства (Cyber Neon, Titan Pro, Retro Keypad, Retro Brick или Beeper)",
+        "english": "Device Model (Cyber Neon, Titan Pro, Retro Keypad, Retro Brick or Beeper)",
+        "tchinese": "Device Model (Cyber Neon, Titan Pro, Retro Keypad, Retro Brick or Beeper)"
+      },
+      "type": "list",
+      "default": "cyber-neon",
+      "enumerate": [
+        {
+          "value": "cyber-neon"
+        },
+        {
+          "value": "titan-pro"
+        },
+        {
+          "value": "retro-keypad"
+        },
+        {
+          "value": "retro-brick"
+        },
+        {
+          "value": "beeper"
+        }
+      ]
+    },
+    {
+      "name": "PhoneMode",
+      "category": {
+        "russian": "📱 Модель и Корпус",
+        "english": "📱 Phone Model & Chassis",
+        "tchinese": "📱 Phone Model & Chassis"
+      },
+      "desc": {
+        "russian": "Режим отображения (3D наклон или плоский 2D)",
+        "english": "Phone Display Mode",
+        "tchinese": "Phone Display Mode"
+      },
+      "type": "list",
+      "default": "3D-Tilt",
+      "enumerate": [
+        {
+          "value": "3D-Tilt"
+        },
+        {
+          "value": "2D-Flat"
+        }
+      ]
+    },
+    {
+      "name": "PhoneFrameColor",
+      "category": {
+        "russian": "📱 Модель и Корпус",
+        "english": "📱 Phone Model & Chassis",
+        "tchinese": "📱 Phone Model & Chassis"
+      },
+      "desc": {
+        "russian": "Цвет корпуса и граней (серебро, черный, кибер, золото, синий, бирюзовый, фиолетовый, желтый)",
+        "english": "Phone Body & Chassis Color",
+        "tchinese": "Phone Body & Chassis Color"
+      },
+      "type": "list",
+      "default": "silver",
+      "enumerate": [
+        {
+          "value": "silver"
+        },
+        {
+          "value": "black"
+        },
+        {
+          "value": "cyber"
+        },
+        {
+          "value": "gold"
+        },
+        {
+          "value": "navy"
+        },
+        {
+          "value": "teal"
+        },
+        {
+          "value": "purple"
+        },
+        {
+          "value": "yellow"
+        },
+        {
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "name": "LcdBacklightColor",
+      "category": {
+        "russian": "📟 Ретро-дисплей / LCD Backlight",
+        "english": "📟 Retro Display / LCD Backlight",
+        "tchinese": "📟 Retro Display / LCD Backlight"
+      },
+      "desc": {
+        "russian": "Цвет подсветки ретро-экрана (для Brick и Beeper)",
+        "english": "Retro LCD Backlight Color (for Brick & Beeper)",
+        "tchinese": "Retro LCD Backlight Color (for Brick & Beeper)"
+      },
+      "type": "list",
+      "default": "green",
+      "enumerate": [
+        {
+          "value": "green"
+        },
+        {
+          "value": "teal"
+        },
+        {
+          "value": "amber"
+        },
+        {
+          "value": "blue"
+        },
+        {
+          "value": "white"
+        }
+      ]
+    },
+    {
+      "name": "DeviceCustomTitle",
+      "category": {
+        "russian": "📱 Модель и Корпус",
+        "english": "📱 Phone Model & Chassis",
+        "tchinese": "📱 Phone Model & Chassis"
+      },
+      "desc": {
+        "russian": "Пользовательская надпись на корпусе / имя оператора",
+        "english": "Custom Device Label / Operator Name",
+        "tchinese": "Custom Device Label / Operator Name"
+      },
+      "type": "string",
+      "default": "RUTONY"
+    },
+    {
+      "name": "TiltY",
+      "category": {
+        "russian": "📱 Модель и Корпус",
+        "english": "📱 Phone Model & Chassis",
+        "tchinese": "📱 Phone Model & Chassis"
+      },
+      "desc": {
+        "russian": "Угол поворота Y (3D угол влево/вправо)",
+        "english": "3D Tilt Y (deg)",
+        "tchinese": "3D Tilt Y (deg)"
+      },
+      "type": "integer",
+      "default": -16,
+      "min": -45,
+      "max": 45
+    },
+    {
+      "name": "TiltX",
+      "category": {
+        "russian": "📱 Модель и Корпус",
+        "english": "📱 Phone Model & Chassis",
+        "tchinese": "📱 Phone Model & Chassis"
+      },
+      "desc": {
+        "russian": "Угол наклона X (3D наклон вперед/назад)",
+        "english": "3D Tilt X (deg)",
+        "tchinese": "3D Tilt X (deg)"
+      },
+      "type": "integer",
+      "default": 8,
+      "min": -30,
+      "max": 30
+    },
+    {
+      "name": "TiltZ",
+      "category": {
+        "russian": "📱 Модель и Корпус",
+        "english": "📱 Phone Model & Chassis",
+        "tchinese": "📱 Phone Model & Chassis"
+      },
+      "desc": {
+        "russian": "Угол поворота Z (вращение)",
+        "english": "3D Tilt Z (deg)",
+        "tchinese": "3D Tilt Z (deg)"
+      },
+      "type": "integer",
+      "default": 2,
+      "min": -20,
+      "max": 20
+    },
+    {
+      "name": "ShowButtons",
+      "category": {
+        "russian": "📱 Модель и Корпус",
+        "english": "📱 Phone Model & Chassis",
+        "tchinese": "📱 Phone Model & Chassis"
+      },
+      "desc": {
+        "russian": "Боковые металлические кнопки телефона",
+        "english": "Show Side Hardware Buttons",
+        "tchinese": "Show Side Hardware Buttons"
+      },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "ShowEdgeLine",
+      "category": {
+        "russian": "📱 Модель и Корпус",
+        "english": "📱 Phone Model & Chassis",
+        "tchinese": "📱 Phone Model & Chassis"
+      },
+      "desc": {
+        "russian": "Неоновая акцентная полоса на левом краю экрана (Cyber Neon)",
+        "english": "Show Neon Accent Line on Left Screen Edge (Cyber Neon)",
+        "tchinese": "Show Neon Accent Line on Left Screen Edge (Cyber Neon)"
+      },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "EdgeLineColor",
+      "category": {
+        "russian": "📱 Модель и Корпус",
+        "english": "📱 Phone Model & Chassis",
+        "tchinese": "📱 Phone Model & Chassis"
+      },
+      "desc": {
+        "russian": "Цвет полосы на левом краю (как на скрине)",
+        "english": "Left Screen Edge Accent Color",
+        "tchinese": "Left Screen Edge Accent Color"
+      },
+      "type": "color",
+      "default": "#53fc18"
+    },
+    {
+      "name": "ShowGlassGlare",
+      "category": {
+        "russian": "📱 Модель и Корпус",
+        "english": "📱 Phone Model & Chassis",
+        "tchinese": "📱 Phone Model & Chassis"
+      },
+      "desc": {
+        "russian": "Световой блик на стекле экрана",
+        "english": "Show Glass Glare Reflection",
+        "tchinese": "Show Glass Glare Reflection"
+      },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "PhoneWidth",
+      "category": {
+        "russian": "📱 Модель и Корпус",
+        "english": "📱 Phone Model & Chassis",
+        "tchinese": "📱 Phone Model & Chassis"
+      },
+      "desc": {
+        "russian": "Ширина телефона (px)",
+        "english": "Phone Width (px)",
+        "tchinese": "Phone Width (px)"
+      },
+      "type": "integer",
+      "default": 360,
+      "min": 280,
+      "max": 500
+    },
+    {
+      "name": "PhoneHeight",
+      "category": {
+        "russian": "📱 Модель и Корпус",
+        "english": "📱 Phone Model & Chassis",
+        "tchinese": "📱 Phone Model & Chassis"
+      },
+      "desc": {
+        "russian": "Высота телефона (px)",
+        "english": "Phone Height (px)",
+        "tchinese": "Phone Height (px)"
+      },
+      "type": "integer",
+      "default": 760,
+      "min": 500,
+      "max": 950
+    },
+    {
+      "name": "ShowStatusBar",
+      "category": {
+        "russian": "⏱️ Верхняя строка и статус",
+        "english": "⏱️ Status Bar",
+        "tchinese": "⏱️ Status Bar"
+      },
+      "desc": {
+        "russian": "Верхняя строка состояния телефона",
+        "english": "Show Top Status Bar",
+        "tchinese": "Show Top Status Bar"
+      },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "ShowCameraPunch",
+      "category": {
+        "russian": "⏱️ Верхняя строка и статус",
+        "english": "⏱️ Status Bar",
+        "tchinese": "⏱️ Status Bar"
+      },
+      "desc": {
+        "russian": "Вырез камеры / Dynamic Island",
+        "english": "Show Camera Notch / Dynamic Island",
+        "tchinese": "Show Camera Notch / Dynamic Island"
+      },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "ShowLiveClock",
+      "category": {
+        "russian": "⏱️ Верхняя строка и статус",
+        "english": "⏱️ Status Bar",
+        "tchinese": "⏱️ Status Bar"
+      },
+      "desc": {
+        "russian": "Живые цифровые часы (время стрима / ПК)",
+        "english": "Show Live Digital Clock",
+        "tchinese": "Show Live Digital Clock"
+      },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "ShowOnlineCounter",
+      "category": {
+        "russian": "⏱️ Верхняя строка и статус",
+        "english": "⏱️ Status Bar",
+        "tchinese": "⏱️ Status Bar"
+      },
+      "desc": {
+        "russian": "Показывать счётчик онлайна (выключено)",
+        "english": "Show Online Counter in Status Bar",
+        "tchinese": "Show Online Counter in Status Bar"
+      },
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "ShowHomeBar",
+      "category": {
+        "russian": "⏱️ Верхняя строка и статус",
+        "english": "⏱️ Status Bar",
+        "tchinese": "⏱️ Status Bar"
+      },
+      "desc": {
+        "russian": "Нижняя полоса жестов (Home indicator)",
+        "english": "Show Bottom Home Gesture Bar",
+        "tchinese": "Show Bottom Home Gesture Bar"
+      },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "FontNickname",
+      "category": {
+        "russian": "💬 Чат и Шрифт",
+        "english": "💬 Chat & Typography",
+        "tchinese": "💬 Chat & Typography"
+      },
+      "desc": {
+        "russian": "Шрифт никнейма",
+        "english": "Nickname Font",
+        "tchinese": "Nickname Font"
+      },
+      "type": "font",
+      "default": {
+        "name": "Comfortaa",
+        "size": 15
+      }
+    },
+    {
+      "name": "FontText",
+      "category": {
+        "russian": "💬 Чат и Шрифт",
+        "english": "💬 Chat & Typography",
+        "tchinese": "💬 Chat & Typography"
+      },
+      "desc": {
+        "russian": "Шрифт текста сообщения",
+        "english": "Message Text Font",
+        "tchinese": "Message Text Font"
+      },
+      "type": "font",
+      "default": {
+        "name": "Comfortaa",
+        "size": 15
+      }
+    },
+    {
+      "name": "NicknameColor",
+      "category": {
+        "russian": "💬 Чат и Шрифт",
+        "english": "💬 Chat & Typography",
+        "tchinese": "💬 Chat & Typography"
+      },
+      "desc": {
+        "russian": "Цвет никнейма по умолчанию",
+        "english": "Default Nickname Color",
+        "tchinese": "Default Nickname Color"
+      },
+      "type": "color",
+      "default": "#ff3e88"
+    },
+    {
+      "name": "UserNickColor",
+      "category": {
+        "russian": "💬 Чат и Шрифт",
+        "english": "💬 Chat & Typography",
+        "tchinese": "💬 Chat & Typography"
+      },
+      "desc": {
+        "russian": "Использовать уникальный цвет ника зрителя из чата",
+        "english": "Use Stream Platform Nickname Colors",
+        "tchinese": "Use Stream Platform Nickname Colors"
+      },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "NicknameBold",
+      "category": {
+        "russian": "💬 Чат и Шрифт",
+        "english": "💬 Chat & Typography",
+        "tchinese": "💬 Chat & Typography"
+      },
+      "desc": {
+        "russian": "Жирный никнейм",
+        "english": "Bold Nickname",
+        "tchinese": "Bold Nickname"
+      },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "TextColor",
+      "category": {
+        "russian": "💬 Чат и Шрифт",
+        "english": "💬 Chat & Typography",
+        "tchinese": "💬 Chat & Typography"
+      },
+      "desc": {
+        "russian": "Цвет текста сообщений",
+        "english": "Message Text Color",
+        "tchinese": "Message Text Color"
+      },
+      "type": "color",
+      "default": "#f1f5f9"
+    },
+    {
+      "name": "ReplyColor",
+      "category": {
+        "russian": "💬 Чат и Шрифт",
+        "english": "💬 Chat & Typography",
+        "tchinese": "💬 Chat & Typography"
+      },
+      "desc": {
+        "russian": "Цвет ответа (Reply)",
+        "english": "Reply Color",
+        "tchinese": "Reply Color"
+      },
+      "type": "color",
+      "default": "#38bdf8"
+    },
+    {
+      "name": "AlertColor",
+      "category": {
+        "russian": "💬 Чат и Шрифт",
+        "english": "💬 Chat & Typography",
+        "tchinese": "💬 Chat & Typography"
+      },
+      "desc": {
+        "russian": "Цвет оповещений / донатов",
+        "english": "Alert & Donation Color",
+        "tchinese": "Alert & Donation Color"
+      },
+      "type": "color",
+      "default": "#f59e0b"
+    },
+    {
+      "name": "LinksColor",
+      "category": {
+        "russian": "💬 Чат и Шрифт",
+        "english": "💬 Chat & Typography",
+        "tchinese": "💬 Chat & Typography"
+      },
+      "desc": {
+        "russian": "Цвет ссылок",
+        "english": "Links Color",
+        "tchinese": "Links Color"
+      },
+      "type": "color",
+      "default": "#38bdf8"
+    },
+    {
+      "name": "ShowTimestamps",
+      "category": {
+        "russian": "💬 Чат и Шрифт",
+        "english": "💬 Chat & Typography",
+        "tchinese": "💬 Chat & Typography"
+      },
+      "desc": {
+        "russian": "Показывать время отправки сообщений (как на скрине 9:14)",
+        "english": "Show Message Timestamps (e.g. 9:14)",
+        "tchinese": "Show Message Timestamps (e.g. 9:14)"
+      },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "ShowBadges",
+      "category": {
+        "russian": "💬 Чат и Шрифт",
+        "english": "💬 Chat & Typography",
+        "tchinese": "💬 Chat & Typography"
+      },
+      "desc": {
+        "russian": "Значки подписчиков, уровней и ролей",
+        "english": "Show Badges (Subscribers, Levels, Roles)",
+        "tchinese": "Show Badges (Subscribers, Levels, Roles)"
+      },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "ShowSiteIcons",
+      "category": {
+        "russian": "💬 Чат и Шрифт",
+        "english": "💬 Chat & Typography",
+        "tchinese": "💬 Chat & Typography"
+      },
+      "desc": {
+        "russian": "Иконки стрим-платформ (Kick, Twitch, YouTube...)",
+        "english": "Show Platform Icons (Kick, Twitch, YouTube)",
+        "tchinese": "Show Platform Icons (Kick, Twitch, YouTube)"
+      },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "ShowAvatars",
+      "category": {
+        "russian": "💬 Чат и Шрифт",
+        "english": "💬 Chat & Typography",
+        "tchinese": "💬 Chat & Typography"
+      },
+      "desc": {
+        "russian": "Показывать круглые аватарки пользователей",
+        "english": "Show User Avatars",
+        "tchinese": "Show User Avatars"
+      },
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "TextShadow",
+      "category": {
+        "russian": "💬 Чат и Шрифт",
+        "english": "💬 Chat & Typography",
+        "tchinese": "💬 Chat & Typography"
+      },
+      "desc": {
+        "russian": "Тень текста для четкости на стриме",
+        "english": "Enable Text Shadow",
+        "tchinese": "Enable Text Shadow"
+      },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "ScreenBgColor",
+      "category": {
+        "russian": "🎨 Цвета Экрана",
+        "english": "🎨 Screen Colors",
+        "tchinese": "🎨 Screen Colors"
+      },
+      "desc": {
+        "russian": "Цвет фона экрана телефона",
+        "english": "Phone Screen Background Color",
+        "tchinese": "Phone Screen Background Color"
+      },
+      "type": "color",
+      "default": "#07080a"
+    },
+    {
+      "name": "ScreenOpacity",
+      "category": {
+        "russian": "🎨 Цвета Экрана",
+        "english": "🎨 Screen Colors",
+        "tchinese": "🎨 Screen Colors"
+      },
+      "desc": {
+        "russian": "Непрозрачность экрана телефона (%)",
+        "english": "Phone Screen Opacity (%)",
+        "tchinese": "Phone Screen Opacity (%)"
+      },
+      "type": "integer",
+      "default": 96,
+      "min": 0,
+      "max": 100
+    },
+    {
+      "name": "AutoHidePhone",
+      "category": {
+        "russian": "⚙️ Отображение и Анимация",
+        "english": "⚙️ Timing & Scroll",
+        "tchinese": "⚙️ Timing & Scroll"
+      },
+      "desc": {
+        "russian": "Вылезать при сообщении и исчезать обратно через 6-7 сек (AutoHide)",
+        "english": "Slide in on message and disappear after 6-7s (AutoHide)",
+        "tchinese": "Slide in on message and disappear after 6-7s (AutoHide)"
+      },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "PhoneHideTimeout",
+      "category": {
+        "russian": "⚙️ Отображение и Анимация",
+        "english": "⚙️ Timing & Scroll",
+        "tchinese": "⚙️ Timing & Scroll"
+      },
+      "desc": {
+        "russian": "Время показа устройства после сообщения (сек, по умолч. 7 сек)",
+        "english": "Visible duration after message (sec, default 7s)",
+        "tchinese": "Visible duration after message (sec, default 7s)"
+      },
+      "type": "integer",
+      "default": 7,
+      "min": 2,
+      "max": 60
+    },
+    {
+      "name": "PhoneAppearAnimation",
+      "category": {
+        "russian": "⚙️ Отображение и Анимация",
+        "english": "⚙️ Timing & Scroll",
+        "tchinese": "⚙️ Timing & Scroll"
+      },
+      "desc": {
+        "russian": "Анимация появления (вылезает снизу, справа, слева, всплывает)",
+        "english": "Appearance Animation (slide bottom, right, left, pop, fade)",
+        "tchinese": "Appearance Animation (slide bottom, right, left, pop, fade)"
+      },
+      "type": "list",
+      "default": "slide",
+      "enumerate": [
+        {
+          "value": "slide"
+        },
+        {
+          "value": "slide-right"
+        },
+        {
+          "value": "slide-left"
+        },
+        {
+          "value": "pop"
+        },
+        {
+          "value": "fade"
+        }
+      ]
+    },
+    {
+      "name": "PhoneMotion",
+      "category": {
+        "russian": "⚙️ Отображение и Анимация",
+        "english": "⚙️ Timing & Scroll",
+        "tchinese": "⚙️ Timing & Scroll"
+      },
+      "desc": {
+        "russian": "Живое движение / покачивание телефона (чутка двигается)",
+        "english": "Subtle Idle Motion / Floating",
+        "tchinese": "Subtle Idle Motion / Floating"
+      },
+      "type": "list",
+      "default": "floating",
+      "enumerate": [
+        {
+          "value": "floating"
+        },
+        {
+          "value": "breathing"
+        },
+        {
+          "value": "handheld"
+        },
+        {
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "name": "MessageHapticPulse",
+      "category": {
+        "russian": "⚙️ Отображение и Анимация",
+        "english": "⚙️ Timing & Scroll",
+        "tchinese": "⚙️ Timing & Scroll"
+      },
+      "desc": {
+        "russian": "Микро-вибрация (отклик) экрана при новом сообщении",
+        "english": "Micro-vibration on new message",
+        "tchinese": "Micro-vibration on new message"
+      },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "QtyMessages",
+      "category": {
+        "russian": "⚙️ Отображение и Анимация",
+        "english": "⚙️ Timing & Scroll",
+        "tchinese": "⚙️ Timing & Scroll"
+      },
+      "desc": {
+        "russian": "Максимальное число сообщений в телефоне",
+        "english": "Max Messages on Screen",
+        "tchinese": "Max Messages on Screen"
+      },
+      "type": "integer",
+      "default": 16,
+      "min": 3,
+      "max": 35
+    },
+    {
+      "name": "HideMessages",
+      "category": {
+        "russian": "⚙️ Отображение и Анимация",
+        "english": "⚙️ Timing & Scroll",
+        "tchinese": "⚙️ Timing & Scroll"
+      },
+      "desc": {
+        "russian": "Автоматически скрывать сообщения по таймеру",
+        "english": "Auto Hide Inactive Messages",
+        "tchinese": "Auto Hide Inactive Messages"
+      },
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "TimeNewMessages",
+      "category": {
+        "russian": "⚙️ Отображение и Анимация",
+        "english": "⚙️ Timing & Scroll",
+        "tchinese": "⚙️ Timing & Scroll"
+      },
+      "desc": {
+        "russian": "Время показа сообщения до скрытия (сек)",
+        "english": "Message Visible Time (sec)",
+        "tchinese": "Message Visible Time (sec)"
+      },
+      "type": "integer",
+      "default": 18,
+      "min": 3,
+      "max": 120
+    },
+    {
+      "name": "DemoMode",
+      "category": {
+        "russian": "⚙️ Отображение и Анимация",
+        "english": "⚙️ Timing & Scroll",
+        "tchinese": "⚙️ Timing & Scroll"
+      },
+      "desc": {
+        "russian": "Демо-режим с тестовыми сообщениями (выключено)",
+        "english": "Demo Mode with Sample Messages",
+        "tchinese": "Demo Mode with Sample Messages"
+      },
+      "type": "bool",
+      "default": false
+    }
+  ]
+}

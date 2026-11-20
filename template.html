@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<title>Smartphone Chat - RutonyChat Theme</title>
+
+<!-- Non-blocking Google Fonts (with local fallbacks) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Nunito:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+<!-- External Stylesheets (RutonyChat base) -->
+<link href="chat.css" rel="stylesheet" type="text/css" />
+<link href="../perfect-scrollbar.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="../animate.css">
+
+<!-- Scripts with automatic fallback -->
+<script src="../jquery.min.js"></script>
+<script src="../jquery.tmpl.js"></script>
+<script src="../extended_methods.js"></script>
+<script src="../perfect-scrollbar.jquery.min.js"></script>
+
+<script type="text/javascript">
+	// =========================================================================
+	// RutonyChat Theme Engine - Multi-Model Smartphone
+	// =========================================================================
+
+	var themeIndex = "smartphone";
+	var autoScroll = true;
+
+	var STORAGE_KEY = 'rutony_theme_params_smartphone_v3';
+
+	function getStoredParams() {
+		try {
+			var raw = localStorage.getItem(STORAGE_KEY);
+			if (raw) {
+				var p = JSON.parse(raw);
+				if (p && typeof p === 'object') return p;
+			}
+		} catch(e) {}
+		return null;
+	}
+
+	function storeParams(p) {
+		if (!p || typeof p !== 'object') return;
+		try {
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+		} catch(e) {}
+	}
+
+	var isInEditor = (function() {
+		try { return window.self !== window.top; } catch(e) { return true; }
+	})();
+
+	// -------------------------------------------------------------------------
+	// Defaults
+	// -------------------------------------------------------------------------
+	function normalizePhoneModel(raw) {
+		var m = String(raw || '').toLowerCase().trim();
+		if (m === 'titan-pro' || m === 'titan' || m === 'iphone' || m === 'apple' || m === 'ios') return 'titan-pro';
+		if (m === 'cyber-neon' || m === 'neon' || m === 'android' || m === 'google') return 'cyber-neon';
+		if (m === 'retro-keypad' || m === 'keypad' || m === 'symbian' || m === 'n73') return 'retro-keypad';
+		if (m === 'retro-brick' || m === 'brick' || m === 'nokia3310' || m === 'nokia' || m === '3310') return 'retro-brick';
+		if (m === 'beeper' || m === 'pager' || m === 'motorola') return 'beeper';
+		return 'cyber-neon';
+	}
+
+	var phoneModel           = "cyber-neon"; // "cyber-neon", "titan-pro", "retro-keypad", "retro-brick", "beeper"
+	var phoneMode            = "3D-Tilt"; // "3D-Tilt", "2D-Flat"
+	var phoneFrameColor      = "silver";
+	var tiltY                = -16;
+	var tiltX                = 8;
+	var tiltZ                = 2;
+	var phoneWidth           = 360;
+	var phoneHeight          = 760;
+	var showButtons          = true;
+	var showEdgeLine         = true;
+	var edgeLineColor        = "#53fc18";
+	var showGlassGlare       = true;
+
+	// Auto-hide phone when inactive (appear on new message, disappear after 6-7s)
+	var autoHidePhone        = true;
+	var phoneHideTimeout     = 7000; // 7 seconds (6-7s)
+	var phoneAppearAnimation = "slide";
+	var phoneTimer           = null;
+
+	// Subtle idle motion & haptic response
+	var phoneMotion          = "floating"; // "floating", "breathing", "handheld", "none"
+	var messageHapticPulse   = true;
+
+	// Retro LCD screen & custom branding
+	var lcdBacklightColor    = "green"; // "green", "teal", "amber", "blue", "white"
+	var deviceCustomTitle    = "RUTONY";
+
+	var showStatusBar        = true;
+	var showCameraPunch      = true;
+	var showLiveClock        = true;
+	var showOnlineCounter    = false;
+	var showHomeBar          = true;
+	var showDemoMode         = false;
+
+	var urlM = null;
+	var urlTest = null;
+	var urlMotion = null;
+	var urlLight = null;
+	var urlTitle = null;
+	var urlCase = null;
+	try {
+		var rawQuery = (window.location.search || '') + (window.location.hash || '');
+		rawQuery = rawQuery.replace(/\^/g, '');
+		var sp = new URLSearchParams(rawQuery.indexOf('?') >= 0 ? rawQuery.substring(rawQuery.indexOf('?')) : rawQuery);
+		urlM = sp.get("model");
+		urlTest = sp.get("test");
+		urlMotion = sp.get("motion");
+		urlLight = sp.get("light") || sp.get("backlight");
+		urlTitle = sp.get("title");
+		urlCase = sp.get("case") || sp.get("frame");
+		if (urlM) phoneModel = normalizePhoneModel(urlM);
+		if (urlMotion) phoneMotion = urlMotion.toLowerCase().trim();
+		if (urlLight) lcdBacklightColor = urlLight.toLowerCase().trim();
+		if (urlTitle) deviceCustomTitle = urlTitle;
+		if (urlCase) phoneFrameColor = urlCase.toLowerCase().trim();
+		if (urlTest === "1" || urlTest === "true") {
+			autoHidePhone = false;
+			showDemoMode = true;
+		}
+	} catch(e) {}
+
+	var fNick                = { name: "Comfortaa", size: 15, style: "Bold" };
+	var fText                = { name: "Comfortaa", size: 15, style: "Regular" };
+	var cNick                = "#ff3e88";
+	var userNickColor        = true;
+	var nicknameBold         = true;
+
+	var cText                = "#f1f5f9";
+	var cReply               = "#38bdf8";
+	var cAlert               = "#f59e0b";
+	var cLink                = "#38bdf8";
+	var textShadow           = true;
+
+	var showTimestamps       = true;
+	var showBadges           = true;
+	var showSiteIcons        = true;
+	var showAvatars          = false;
+
+	var screenBgColor        = "#07080a";
+	var screenOpacity        = 96;
+
+	var qtyMessages          = 16;
+	var qtyAllMessages       = 250;
+	var timeNewMessage       = 18000;
+	var hideMessages         = false;
+
+	// Platform Colors for icon glowing
+	var SITE_COLORS = {
+		twitch: '#9146FF',
+		youtube: '#FF0033',
+		youtube_moderator: '#FF0033',
+		youtube_subscriber: '#FF0033',
+		kick: '#53FC18',
+		vkplay: '#0A84FF',
+		vkplaylive: '#0A84FF',
+		vkontakte: '#0077FF',
+		vk: '#0077FF',
+		trovo: '#19E6C8',
+		wtv: '#A855F7',
+		tiktok: '#00F2FE',
+		goodgame: '#7BC043',
+		discord: '#5865F2',
+		telegram: '#2AABEE',
+		tg: '#2AABEE',
+		wasd: '#E4405F',
+		rutube: '#FF3300',
+		nuum: '#A855F7',
+		steam: '#66C0F4',
+		donationalerts: '#F4A261',
+		donatestream: '#FF7043',
+		donatty: '#2B6CB0',
+		tonady: '#FF4567',
+		cloudtips: '#00D68F'
+	};
+
+	// -------------------------------------------------------------------------
+	// Trigger Phone Visibility (Slides in on new message) & Micro-Haptic Pulse
+	// -------------------------------------------------------------------------
+	function triggerPhoneVisible() {
+		var frame = $('#phone-frame');
+		var floatWrapper = $('#phone-float-wrapper');
+		frame.addClass('phone-visible');
+		floatWrapper.addClass('is-floating');
+
+		if (autoHidePhone && urlTest !== "1" && urlTest !== "true") {
+			if (phoneTimer) clearTimeout(phoneTimer);
+			phoneTimer = setTimeout(function() {
+				frame.removeClass('phone-visible');
+				floatWrapper.removeClass('is-floating');
+				phoneTimer = null;
+			}, phoneHideTimeout);
+		}
+	}
+
+	function triggerHapticPulse() {
+		if (!messageHapticPulse) return;
+		var screen = $('#phone-screen');
+		var frame = $('#phone-frame');
+		var norm = normalizePhoneModel(phoneModel);
+
+		screen.removeClass('screen-haptic-pulse');
+		if (screen[0]) void screen[0].offsetWidth;
+		screen.addClass('screen-haptic-pulse');
+		setTimeout(function() {
+			screen.removeClass('screen-haptic-pulse');
+		}, 350);
+
+		// Retro Brick Monochrome LCD Backlight Pulse
+		if (norm === 'retro-brick') {
+			screen.removeClass('backlight-flash');
+			if (screen[0]) void screen[0].offsetWidth;
+			screen.addClass('backlight-flash');
+			setTimeout(function() {
+				screen.removeClass('backlight-flash');
+			}, 550);
+		}
+
+		// Pager Red Alert LED & Physical Buzz
+		if (norm === 'beeper') {
+			var led = $('#pager-led');
+			if (led.length) {
+				led.removeClass('led-active');
+				if (led[0]) void led[0].offsetWidth;
+				led.addClass('led-active');
+				setTimeout(function() {
+					led.removeClass('led-active');
+				}, 1800);
+			}
+			frame.removeClass('pager-vibrate-buzz');
+			if (frame[0]) void frame[0].offsetWidth;
+			frame.addClass('pager-vibrate-buzz');
+			setTimeout(function() {
+				frame.removeClass('pager-vibrate-buzz');
+			}, 750);
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// Color & Style Helpers
+	// -------------------------------------------------------------------------
+	function parseColorRgb(color, fallback) {
+		var fb = fallback || "7, 8, 10";
+		if (!color) return fb;
+		var s = String(color).trim();
+		var m = /^rgba?\(\s*([0-9.]+)\s*,\s*([0-9.]+)\s*,\s*([0-9.]+)/i.exec(s);
+		if (m) {
+			return Math.max(0, Math.min(255, Math.round(Number(m[1])))) + ", " +
+			       Math.max(0, Math.min(255, Math.round(Number(m[2])))) + ", " +
+			       Math.max(0, Math.min(255, Math.round(Number(m[3]))));
+		}
+		var hex = s.replace('#', '').trim();
+		if (hex.length === 3 || hex.length === 4) {
+			hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+		}
+		if (hex.length >= 6) hex = hex.substring(0, 6);
+		var n = parseInt(hex, 16);
+		if (isNaN(n)) return fb;
+		return ((n >> 16) & 255) + ", " + ((n >> 8) & 255) + ", " + (n & 255);
+	}
+
+	function parseFontStyleFlags(fontObj, defaultBold) {
+		var s = (fontObj && fontObj.style) ? String(fontObj.style).toLowerCase() : 'regular';
+		var isBold = Boolean(defaultBold) || s.indexOf('bold') >= 0;
+		var isItalic = s.indexOf('italic') >= 0;
+		var dec = s.indexOf('underline') >= 0 ? 'underline' : (s.indexOf('strikeout') >= 0 ? 'line-through' : 'none');
+		return {
+			weight: isBold ? '700' : '500',
+			style: isItalic ? 'italic' : 'normal',
+			decoration: dec
+		};
+	}
+
+	// -------------------------------------------------------------------------
+	// Apply Properties to DOM & CSS
+	// -------------------------------------------------------------------------
+	function applyThemeProperties() {
+		var root = document.documentElement;
+
+		// Phone geometry
+		root.style.setProperty('--phone-width', phoneWidth + 'px');
+		root.style.setProperty('--phone-height', phoneHeight + 'px');
+		root.style.setProperty('--tilt-y', tiltY + 'deg');
+		root.style.setProperty('--tilt-x', tiltX + 'deg');
+		root.style.setProperty('--tilt-z', tiltZ + 'deg');
+
+		// Screen background & accent line
+		var rawBg = parseColorRgb(screenBgColor, '7, 8, 10');
+		var op = (screenOpacity / 100).toFixed(2);
+		root.style.setProperty('--screen-bg', 'rgba(' + rawBg + ', ' + op + ')');
+		root.style.setProperty('--edge-line-color', edgeLineColor);
+
+		// Typography: Nickname
+		var nickFontName = (fNick && fNick.name) ? fNick.name : (typeof fNick === 'string' ? fNick : 'Comfortaa');
+		var nickFontSize = (fNick && fNick.size) ? fNick.size : 15;
+		var nickFlags = parseFontStyleFlags(fNick, nicknameBold);
+		root.style.setProperty('--font-nick', '"' + String(nickFontName).replace(/["']/g, '') + '", "Comfortaa", "Nunito", sans-serif');
+		root.style.setProperty('--nick-size', nickFontSize + 'px');
+		root.style.setProperty('--nick-weight', nickFlags.weight);
+		root.style.setProperty('--nick-style', nickFlags.style);
+		root.style.setProperty('--nick-decoration', nickFlags.decoration);
+
+		// Typography: Message Text
+		var textFontName = (fText && fText.name) ? fText.name : (typeof fText === 'string' ? fText : 'Comfortaa');
+		var textFontSize = (fText && fText.size) ? fText.size : 15;
+		var textFlags = parseFontStyleFlags(fText, false);
+		root.style.setProperty('--font-text', '"' + String(textFontName).replace(/["']/g, '') + '", "Comfortaa", "Nunito", sans-serif');
+		root.style.setProperty('--text-size', textFontSize + 'px');
+		root.style.setProperty('--text-weight', textFlags.weight);
+		root.style.setProperty('--text-style', textFlags.style);
+		root.style.setProperty('--text-decoration', textFlags.decoration);
+
+		// Colors
+		root.style.setProperty('--nick-color', cNick);
+		root.style.setProperty('--text-color', cText);
+		root.style.setProperty('--reply-color', cReply);
+		root.style.setProperty('--alert-color', cAlert);
+		root.style.setProperty('--link-color', cLink);
+
+		var sh = textShadow ? '0 1px 3px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0, 0, 0, 0.7)' : 'none';
+		root.style.setProperty('--text-shadow', sh);
+
+		// 3D / 2D Display Mode
+		var stage = $('#stage');
+		stage.removeClass('mode-2d mode-3d');
+		if (phoneMode === '2D-Flat') {
+			stage.addClass('mode-2d');
+		} else {
+			stage.addClass('mode-3d');
+		}
+
+		// Device Model Switching (Cyber Neon, Titan Pro, Retro Keypad, Retro Brick, Beeper)
+		var norm = normalizePhoneModel(phoneModel);
+		var allModelClasses = 'model-cyber-neon model-titan-pro model-retro-keypad model-retro-brick model-beeper model-android model-iphone model-symbian model-nokia3310 model-pager';
+		var frame = $('#phone-frame');
+		frame.removeClass(allModelClasses);
+		$('body').removeClass(allModelClasses);
+
+		var activeClasses = '';
+		if (norm === 'titan-pro') {
+			activeClasses = 'model-titan-pro model-iphone';
+		} else if (norm === 'cyber-neon') {
+			activeClasses = 'model-cyber-neon model-android';
+		} else if (norm === 'retro-keypad') {
+			activeClasses = 'model-retro-keypad model-symbian';
+		} else if (norm === 'retro-brick') {
+			activeClasses = 'model-retro-brick model-nokia3310';
+		} else if (norm === 'beeper') {
+			activeClasses = 'model-beeper model-pager';
+		}
+		frame.addClass(activeClasses);
+		$('body').addClass(activeClasses);
+
+		// Frame color themes (modern and 90s translucent/rugged)
+		frame.removeClass('frame-silver frame-black frame-cyber frame-gold frame-navy frame-teal frame-purple frame-yellow frame-none case-black case-teal case-purple case-yellow case-navy')
+		     .addClass('frame-' + phoneFrameColor)
+		     .addClass('case-' + phoneFrameColor);
+
+		// Backlight color for retro LCD displays
+		var screen = $('#phone-screen');
+		screen.removeClass('light-green light-teal light-amber light-blue light-white')
+		      .addClass('light-' + lcdBacklightColor);
+
+		// Custom branding & operator titles
+		var title = deviceCustomTitle || 'RUTONY';
+		$('#nokia-operator').text(title);
+		$('.symbian-operator').text(title + ' 3G');
+		$('.symbian-brand').text(title);
+		$('.nokia3310-brand').text(title);
+		$('#pager-brand-text').text(norm === 'beeper' ? (deviceCustomTitle && deviceCustomTitle !== 'RUTONY' ? deviceCustomTitle : 'DIGITAL BEEPER') : title);
+
+		// Auto-hide phone state (вылезает при сообщении и исчезает через 6-7с)
+		$('body')
+			.toggleClass('auto-hide-phone', autoHidePhone)
+			.removeClass('anim-slide anim-slide-right anim-slide-left anim-fade anim-pop')
+			.addClass('anim-' + phoneAppearAnimation);
+
+		// Subtle Idle Motion & Floating (floating, breathing, handheld, none)
+		var floatWrapper = $('#phone-float-wrapper');
+		floatWrapper.removeClass('motion-floating motion-breathing motion-handheld motion-none')
+		            .addClass('motion-' + phoneMotion);
+
+		if (!autoHidePhone || urlTest === "1" || urlTest === "true") {
+			frame.addClass('phone-visible');
+			floatWrapper.addClass('is-floating');
+		} else {
+			if (!phoneTimer) {
+				frame.removeClass('phone-visible');
+				floatWrapper.removeClass('is-floating');
+			}
+		}
+
+		// Online counter visibility
+		if (showOnlineCounter) {
+			$('#status-online-group').show();
+		} else {
+			$('#status-online-group').hide();
+		}
+
+		// Global body toggle classes
+		$('body')
+			.toggleClass('hide-buttons', !showButtons)
+			.toggleClass('hide-edge-line', !showEdgeLine)
+			.toggleClass('hide-glare', !showGlassGlare)
+			.toggleClass('hide-status-bar', !showStatusBar)
+			.toggleClass('hide-camera-punch', !showCameraPunch)
+			.toggleClass('hide-live-clock', !showLiveClock)
+			.toggleClass('hide-home-bar', !showHomeBar)
+			.toggleClass('show-avatars', showAvatars)
+			.toggleClass('hide-timestamps', !showTimestamps)
+			.toggleClass('hide-badges', !showBadges)
+			.toggleClass('hide-site-icons', !showSiteIcons)
+			.toggleClass('no-text-shadow', !textShadow);
+
+		// Update existing cards for user nick color
+		$('.nick.has-user-color').each(function() {
+			var uCol = $(this).attr('data-user-color');
+			$(this).css('color', (userNickColor && uCol) ? uCol : cNick);
+		});
+		$('.nick:not(.has-user-color)').css('color', cNick);
+	}
+
+	// -------------------------------------------------------------------------
+	// InitParams - RutonyChat Configuration Dispatcher
+	// -------------------------------------------------------------------------
+	function InitParams(data, fromCache) {
+		if (!data) return;
+		if (typeof data === "string") {
+			try { data = JSON.parse(data); } catch(e) { return; }
+		}
+		if (typeof data !== "object") return;
+
+		if (data.themeIndex) {
+			var tid = String(data.themeIndex).trim().toLowerCase();
+			if (tid !== "smartphone" && tid !== "phone") return;
+		}
+
+		if (data.PhoneModel) phoneModel = urlM || normalizePhoneModel(data.PhoneModel);
+		if (data.PhoneMode) phoneMode = data.PhoneMode;
+		if (data.PhoneFrameColor) phoneFrameColor = urlCase || data.PhoneFrameColor;
+		if (data.LcdBacklightColor) lcdBacklightColor = urlLight || data.LcdBacklightColor;
+		if (data.DeviceCustomTitle) deviceCustomTitle = urlTitle || String(data.DeviceCustomTitle);
+		if (data.TiltY != null) tiltY = parseInt(data.TiltY, 10);
+		if (data.TiltX != null) tiltX = parseInt(data.TiltX, 10);
+		if (data.TiltZ != null) tiltZ = parseInt(data.TiltZ, 10);
+		if (data.PhoneWidth != null) phoneWidth = parseInt(data.PhoneWidth, 10);
+		if (data.PhoneHeight != null) phoneHeight = parseInt(data.PhoneHeight, 10);
+
+		if (data.ShowButtons != null) showButtons = !!data.ShowButtons;
+		if (data.ShowEdgeLine != null) showEdgeLine = !!data.ShowEdgeLine;
+		if (data.EdgeLineColor) edgeLineColor = data.EdgeLineColor;
+		if (data.ShowGlassGlare != null) showGlassGlare = !!data.ShowGlassGlare;
+
+		if (data.AutoHidePhone != null) {
+			autoHidePhone = (urlTest === "1" || urlTest === "true") ? false : !!data.AutoHidePhone;
+		}
+		if (data.PhoneHideTimeout != null) {
+			var pht = parseInt(data.PhoneHideTimeout, 10);
+			if (pht === 15) pht = 7; // migrate default to 6-7s as requested
+			if (!isNaN(pht) && pht >= 2) phoneHideTimeout = pht * 1000;
+		}
+		if (data.PhoneAppearAnimation) phoneAppearAnimation = data.PhoneAppearAnimation;
+		if (data.PhoneMotion) phoneMotion = urlMotion || data.PhoneMotion;
+		if (data.MessageHapticPulse != null) messageHapticPulse = !!data.MessageHapticPulse;
+
+		if (data.ShowStatusBar != null) showStatusBar = !!data.ShowStatusBar;
+		if (data.ShowCameraPunch != null) showCameraPunch = !!data.ShowCameraPunch;
+		if (data.ShowLiveClock != null) showLiveClock = !!data.ShowLiveClock;
+		if (data.ShowOnlineCounter != null) showOnlineCounter = !!data.ShowOnlineCounter;
+		if (data.ShowHomeBar != null) showHomeBar = !!data.ShowHomeBar;
+		if (data.DemoMode != null) {
+			showDemoMode = (urlTest === "1" || urlTest === "true") ? true : !!data.DemoMode;
+		}
+
+		if (data.FontNickname) fNick = data.FontNickname;
+		if (data.FontText) fText = data.FontText;
+		if (data.NicknameColor) cNick = data.NicknameColor;
+		if (data.UserNickColor != null) userNickColor = !!data.UserNickColor;
+		if (data.NicknameBold != null) nicknameBold = !!data.NicknameBold;
+
+		if (data.TextColor) cText = data.TextColor;
+		if (data.ReplyColor) cReply = data.ReplyColor;
+		if (data.AlertColor) cAlert = data.AlertColor;
+		if (data.LinksColor) cLink = data.LinksColor;
+		if (data.TextShadow != null) textShadow = !!data.TextShadow;
+
+		if (data.ShowTimestamps != null) showTimestamps = !!data.ShowTimestamps;
+		if (data.ShowBadges != null) showBadges = !!data.ShowBadges;
+		if (data.ShowSiteIcons != null) showSiteIcons = !!data.ShowSiteIcons;
+		if (data.ShowAvatars != null) showAvatars = !!data.ShowAvatars;
+
+		if (data.ScreenBgColor) screenBgColor = data.ScreenBgColor;
+		if (data.ScreenOpacity != null) screenOpacity = parseInt(data.ScreenOpacity, 10);
+
+		if (data.QtyMessages != null) {
+			var qm = parseInt(data.QtyMessages, 10);
+			if (!isNaN(qm) && qm >= 1) qtyMessages = qm;
+		}
+		if (data.TimeNewMessages != null) {
+			var tm = parseInt(data.TimeNewMessages, 10);
+			if (!isNaN(tm) && tm >= 1) timeNewMessage = tm * 1000;
+		}
+		if (data.HideMessages != null) hideMessages = !!data.HideMessages;
+
+		applyThemeProperties();
+
+		if (!fromCache) {
+			storeParams(data);
+		}
+
+		if (showDemoMode && $('#content .mess').length === 0) {
+			ensurePreviewDemoCards();
+		} else if (!showDemoMode && !isInEditor) {
+			$('#content .mess[message_id^="demo_"]').remove();
+		}
+
+		while ($('#content .mess:not(.m-out)').length > qtyMessages) {
+			$('#content .mess:not(.m-out)').first().detach();
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// Time Helpers (Safe cross-engine formatting without padStart)
+	// -------------------------------------------------------------------------
+	function getMessageTime() {
+		var now = new Date();
+		var h = now.getHours();
+		var m = now.getMinutes();
+		return h + ':' + (m < 10 ? '0' : '') + m;
+	}
+
+	function updateStatusClock() {
+		var now = new Date();
+		var h = now.getHours();
+		var m = now.getMinutes();
+		var str = (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+		$('.status-clock').text(str);
+	}
+
+	// -------------------------------------------------------------------------
+	// Avatar Builder
+	// -------------------------------------------------------------------------
+	function buildAvatar(obj) {
+		var cleanUser = (obj.user || '').replace(/<[^>]*>/g, '').trim();
+		var initial = cleanUser ? cleanUser.charAt(0).toUpperCase() : '?';
+		var bg = (obj.color_nick && obj.color_nick.trim() !== '') ? obj.color_nick : '#6366f1';
+
+		if (obj.user_avatar && obj.user_avatar.trim() !== '') {
+			return '<span class="av"><span class="av-box">' +
+				'<img class="av-img" src="' + obj.user_avatar + '" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\';" />' +
+				'<span class="av-fallback" style="display:none; background:' + bg + '">' + initial + '</span>' +
+			'</span></span>';
+		}
+		return '<span class="av"><span class="av-box"><span class="av-fallback" style="background:' + bg + '">' + initial + '</span></span></span>';
+	}
+
+	// -------------------------------------------------------------------------
+	// Decorate Site Icons
+	// -------------------------------------------------------------------------
+	function decorateSites(el) {
+		if (!el) return;
+		var imgs = $(el).find('.site img, .site-img img');
+		for (var i = 0; i < imgs.length; i++) {
+			var im = imgs[i];
+			var src = (im.getAttribute('src') || '').toLowerCase();
+			var cleanSrc = src.split(/[?#]/)[0];
+			var base = cleanSrc.substring(cleanSrc.lastIndexOf('/') + 1).replace(/\.[a-z0-9]+$/i, '');
+			var key = '';
+
+			if (SITE_COLORS[base]) {
+				key = base;
+			} else {
+				for (var k in SITE_COLORS) {
+					if (base.indexOf(k) >= 0 || src.indexOf('/' + k + '.') >= 0) {
+						key = k;
+						break;
+					}
+				}
+			}
+			im.className = 'site-icon';
+			if (key) {
+				im.setAttribute('data-platform', key);
+				var glowColor = SITE_COLORS[key];
+				im.style.filter = 'drop-shadow(0 0 3px ' + glowColor + ')';
+			}
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// Notification Alert Banner Trigger (for subs, donations, follows)
+	// -------------------------------------------------------------------------
+	var bannerTimeout = null;
+	function triggerAlertBanner(title, body) {
+		// If Titan Pro model, expand Dynamic Island!
+		var norm = normalizePhoneModel(phoneModel);
+		if (norm === 'titan-pro') {
+			var island = $('#dynamic-island');
+			island.addClass('island-expanded');
+			$('#island-text').text(title + ': ' + body.replace(/<[^>]*>/g, '').substring(0, 22));
+			setTimeout(function() {
+				island.removeClass('island-expanded');
+			}, 5000);
+		}
+
+		var banner = $('#phone-alert-banner');
+		$('#alert-banner-title-text').text(title || 'Оповещение');
+		$('#alert-banner-body-text').html(body || '');
+		banner.stop(true, true).css('display', 'block');
+
+		if (bannerTimeout) clearTimeout(bannerTimeout);
+		bannerTimeout = setTimeout(function() {
+			banner.fadeOut(400);
+		}, 6000);
+	}
+
+	// -------------------------------------------------------------------------
+	// Render Message HTML
+	// -------------------------------------------------------------------------
+	function renderMessageHtml(obj) {
+		var safeUser = $('<div>').text(obj.user || '').html();
+		var rawUser = String(obj.user || '').replace(/"/g, '&quot;');
+		return '<div class="mess k-' + obj.kind + '" message_id="' + (obj.message_id || '') + '" user_id="' + (obj.user_id || '') + '">' +
+			'<div class="mess-line">' +
+				obj.avatar_html +
+				'<span class="badges">' +
+					(obj.site_img ? '<span class="site">' + obj.site_img + '</span>' : '') +
+					(obj.sub || '') +
+					(obj.rank_img || '') +
+					(obj.spec_img || '') +
+					(obj.moderator || '') +
+				'</span>' +
+				'<span class="nick ' + obj.user_color_class + '" data-user-color="' + (obj.color_nick || '') + '" style="' + (obj.nick_inline_color || '') + '" site="' + (obj.site || '') + '" user_id="' + (obj.user_id || '') + '" user_name="' + rawUser + '" message_id="' + (obj.message_id || '') + '" onclick="ShowMenu(this)">' +
+					safeUser + ':' +
+				'</span> ' +
+				'<span class="user_mess" id="div_text' + (obj.reply || '0') + '" message_id="' + (obj.message_id || '') + '" user_id="' + (obj.user_id || '') + '" style="' + (obj.mess_style || '') + '">' +
+					(obj.text || '') +
+				'</span>' +
+				'<span class="timestamp">' + obj.timestamp + '</span>' +
+			'</div>' +
+		'</div>';
+	}
+
+	// -------------------------------------------------------------------------
+	// New Message Processing (Phone pops up!)
+	// -------------------------------------------------------------------------
+	function NewMessage(data, isPersistentDemo) {
+		var obj;
+		try {
+			obj = (typeof data === 'string') ? JSON.parse(data) : data;
+		} catch (e) {
+			return;
+		}
+		if (!obj) return;
+
+		// Clear Chat handling
+		if (obj.clear_chat) {
+			var hasTarget = false;
+			if (obj.message_id) {
+				hasTarget = true;
+				var targetMess = $('.user_mess').filter(function() { return $(this).attr('message_id') == obj.message_id; });
+				if (obj.text) {
+					targetMess.text(obj.text);
+				} else {
+					targetMess.closest('.mess').remove();
+				}
+			}
+			if (obj.user_id) {
+				hasTarget = true;
+				var targetUser = $('.user_mess').filter(function() { return $(this).attr('user_id') == obj.user_id; });
+				if (obj.text) {
+					targetUser.text(obj.text);
+				} else {
+					targetUser.closest('.mess').remove();
+				}
+			}
+			if (!hasTarget) {
+				$('#content').empty();
+			}
+			UpdateScroll();
+			return;
+		}
+
+		// Show phone immediately with smooth animation!
+		triggerPhoneVisible();
+
+		// Micro haptic vibration pulse on new message
+		triggerHapticPulse();
+
+		// Message kind
+		obj.kind = (obj.type === 'alert')   ? 'alert'
+		         : (obj.reply == 1)          ? 'reply'
+		         : (obj.type === 'system')  ? 'system'
+		         : (obj.type === 'special') ? 'special'
+		         : 'normal';
+
+		// Trigger notification banner if alert / donation
+		if (obj.kind === 'alert' && !isPersistentDemo) {
+			triggerAlertBanner('★ Оповещение', (obj.user ? '<b>' + obj.user + '</b>: ' : '') + obj.text);
+		}
+
+		// Avatar
+		obj.avatar_html = buildAvatar(obj);
+
+		// Nick color
+		var hasUserColor = (obj.color_nick && obj.color_nick.trim() !== '');
+		obj.user_color_class = hasUserColor ? 'has-user-color' : '';
+		obj.nick_inline_color = (hasUserColor && userNickColor) ? ('color:' + obj.color_nick + ';') : '';
+
+		// Text style
+		obj.mess_style = (obj.color_text && obj.color_text.trim() !== '') ? ('color:' + obj.color_text) : '';
+
+		// Timestamp (like 9:14 in the screenshot)
+		obj.timestamp = obj.timestamp || getMessageTime();
+
+		// Highlight mentions like @Username
+		if (obj.text && typeof obj.text === 'string' && obj.text.indexOf('@') >= 0) {
+			obj.text = obj.text.replace(/(@[a-zA-Z0-9_\u0400-\u04FF]+)/g, '<span class="mention">$1</span>');
+		}
+
+		// Append message
+		var html = renderMessageHtml(obj);
+		$('#content').append(html);
+
+		var el = $('#content').children('.mess').last();
+		decorateSites(el);
+
+		// Auto-hide timer for individual message (if enabled)
+		if (hideMessages && !isPersistentDemo) {
+			setTimeout(function() {
+				el.addClass('m-out');
+				setTimeout(function() {
+					el.detach();
+					UpdateScroll();
+				}, 320);
+			}, timeNewMessage);
+		}
+
+		// Qty limits
+		var maxQty = qtyMessages;
+		if (!hideMessages) {
+			while ($('.mess').length > maxQty) {
+				$('.mess:first').detach();
+			}
+		} else {
+			var active = $('.mess:not(.m-out)');
+			if (active.length > qtyMessages) {
+				var old = active.first();
+				old.addClass('m-out');
+				setTimeout(function() {
+					old.detach();
+					UpdateScroll();
+				}, 260);
+			}
+			if ($('.mess').length > qtyAllMessages) {
+				$('.mess:first').detach();
+			}
+		}
+
+		UpdateScroll();
+	}
+
+	function UpdateScroll() {
+		setTimeout(function() {
+			var wrapper = document.getElementById('chat-wrapper');
+			if (wrapper) {
+				wrapper.scrollTop = wrapper.scrollHeight;
+			}
+			if (typeof autoScroll !== 'undefined' && autoScroll) {
+				$('#chat-wrapper').scrollTop($('#chat-wrapper').prop("scrollHeight"));
+			}
+			if (typeof $.fn.perfectScrollbar === 'function') {
+				try { $('#chat-wrapper').perfectScrollbar('update'); } catch(e) {}
+			}
+		}, 25);
+	}
+
+	function ShowMenu(e) {
+		e = e || window.event;
+		if (typeof SendUserData === 'function') {
+			SendUserData({
+				site: e.getAttribute("site"),
+				user_id: e.getAttribute("user_id"),
+				user_name: e.getAttribute("user_name"),
+				message_id: e.getAttribute("message_id")
+			});
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// Demo Cards (Only shown if DemoMode is turned on in params)
+	// -------------------------------------------------------------------------
+	var DEMO_MESSAGES = [
+		{
+			user: "ПОГНАЛИ И НА ГТА",
+			text: "ЛОЖИЛ Г",
+			color_nick: "#7dd3fc",
+			site_img: '',
+			sub: '',
+			timestamp: ""
+		},
+		{
+			user: "chat_user",
+			text: "Согл?",
+			color_nick: "#f8fafc",
+			site_img: '',
+			sub: '',
+			timestamp: "9:14"
+		},
+		{
+			user: "AlisinyaV",
+			text: "буйки",
+			color_nick: "#ff2d87",
+			site_img: '<img src="images/twitch.png">',
+			sub: '<span class="badge-pill-sub">⚔</span>',
+			timestamp: "9:14"
+		},
+		{
+			user: "Zhe5t111",
+			text: "айно да бала чада наз муракар",
+			color_nick: "#ffd700",
+			site_img: '<img src="images/kick.png">',
+			sub: '<span class="badge-pill-sub">15</span>',
+			timestamp: "9:14"
+		},
+		{
+			user: "CAMOOTSOS",
+			text: "это буек",
+			color_nick: "#ec4899",
+			site_img: '<img src="images/kick.png">',
+			sub: '<span class="badge-pill-pink">21</span>',
+			timestamp: "9:14"
+		},
+		{
+			user: "BotRix",
+			text: "@CAMOOTSOS ты апнул уровень 10!",
+			color_nick: "#22c55e",
+			site_img: '<img src="images/kick.png">',
+			sub: '<span class="badge-pill-verified"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>',
+			timestamp: "9:14"
+		},
+		{
+			user: "CAMOOTSOS",
+			text: "ты че не купался в море ?",
+			color_nick: "#ec4899",
+			site_img: '<img src="images/kick.png">',
+			sub: '<span class="badge-pill-pink">21</span>',
+			timestamp: "9:14"
+		},
+		{
+			user: "Zhe5t111",
+			text: "айно это с цыганского сама переведи я не нанимался",
+			color_nick: "#ffd700",
+			site_img: '<img src="images/kick.png">',
+			sub: '<span class="badge-pill-sub">15</span>',
+			timestamp: "9:14"
+		},
+		{
+			user: "Grap_Zi",
+			text: "Это маленький воздушный шар, Юра, не слушай бестолочей",
+			color_nick: "#fb7185",
+			site_img: '<img src="images/youtube.png">',
+			sub: '<img src="images/youtube_subscriber.png">',
+			timestamp: "9:14"
+		},
+		{
+			user: "CAMOOTSOS",
+			text: "убей оленя",
+			color_nick: "#ec4899",
+			site_img: '<img src="images/kick.png">',
+			sub: '<span class="badge-pill-pink">21</span>',
+			timestamp: "9:15"
+		}
+	];
+
+	function ensurePreviewDemoCards() {
+		if ($('#content').children('.mess').length > 0) return;
+		for (var i = 0; i < DEMO_MESSAGES.length; i++) {
+			var m = DEMO_MESSAGES[i];
+			NewMessage({
+				user: m.user,
+				text: m.text,
+				color_nick: m.color_nick,
+				site_img: m.site_img,
+				sub: m.sub,
+				timestamp: m.timestamp,
+				type: 'normal',
+				message_id: 'demo_' + i,
+				user_id: 'demo_user_' + i
+			}, true);
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// Ready & Fast WebSocket Dispatcher
+	// -------------------------------------------------------------------------
+	$(document).ready(function() {
+		// Start clock
+		updateStatusClock();
+		setInterval(updateStatusClock, 1000);
+
+		// Cache hydration
+		var cached = getStoredParams();
+		if (cached) {
+			if (urlM) cached.PhoneModel = urlM;
+			if (urlTest) {
+				cached.AutoHidePhone = false;
+				cached.DemoMode = true;
+			}
+			InitParams(cached, true);
+		} else {
+			applyThemeProperties();
+		}
+
+		// Enable RutonyChat smooth auto-scroller
+		if (typeof SetAutoScrollPerfect === 'function') {
+			try { SetAutoScrollPerfect(); } catch(e) {}
+		}
+
+		// Only show demo messages if explicitly turned on
+		if (showDemoMode) {
+			ensurePreviewDemoCards();
+		}
+
+		// Attach RutonyChat Socket
+		if (typeof SetSocket === 'function') {
+			try { SetSocket(); } catch(e) {}
+		}
+
+		// Click to trigger phone test (for easy browser previewing)
+		$(document).on('click', function() {
+			triggerPhoneVisible();
+		});
+
+		// Listen for postMessage from RutonyChat UI editor
+		window.addEventListener('message', function(event) {
+			if (!event || !event.data) return;
+			var data = event.data;
+			if (typeof data === 'string') {
+				try { data = JSON.parse(data); } catch(err) { return; }
+			}
+			if (data && (data.type === 'params' || data.values || data.PhoneModel || data.PhoneMode || data.PhoneWidth)) {
+				if (data.values) {
+					InitParams(data.values);
+				} else {
+					InitParams(data);
+				}
+			}
+		});
+
+		// Fast WebSocket handler
+		if (window.socket) {
+			var origHandler = window.socket.onmessage;
+			window.socket.onmessage = function(msg) {
+				var obj;
+				try { obj = JSON.parse(msg.data); } catch(e) { return; }
+				if (obj && obj.type === "params") {
+					InitParams(obj);
+					return;
+				}
+				if (typeof origHandler === 'function') {
+					origHandler(msg);
+				}
+			};
+		}
+	});
+</script>
+
+<!-- RutonyChat jQuery Template for message -->
+<script id="message_template" type="text/x-jquery-tmpl">
+<div class="mess k-${type}" message_id="${message_id}" user_id="${user_id}">
+	<div class="mess-line">
+		{{html avatar_html}}
+		<span class="badges">
+			{{if site_img}}<span class="site">{{html site_img}}</span>{{/if}}
+			{{html sub}} {{html rank_img}} {{html spec_img}} {{html moderator}}
+		</span>
+		<span class="nick ${user_color_class}" data-user-color="${color_nick}" style="${nick_inline_color}" site="${site}" user_id="${user_id}" user_name="${user}" message_id="${message_id}" onclick="ShowMenu(this)">
+			${user}:
+		</span>
+		<span class="user_mess" id="div_text${reply}" message_id="${message_id}" user_id="${user_id}" style="${mess_style}">
+			{{html text}}
+		</span>
+		<span class="timestamp">${timestamp}</span>
+	</div>
+</div>
+</script>
+
+<script id="message_template_alert" type="text/x-jquery-tmpl">
+<div class="mess k-alert" message_id="${message_id}">
+	<div class="mess-line">
+		<span class="badges">{{html site_img}}</span>
+		<span class="nick" style="color:var(--alert-color);">★ Оповещение:</span>
+		<span class="user_mess" style="color:#fef08a;">{{html text}}</span>
+		<span class="timestamp">${timestamp}</span>
+	</div>
+</div>
+</script>
+
+<script id="message_template_system" type="text/x-jquery-tmpl">
+<div class="mess k-system" message_id="${message_id}">
+	<div class="mess-line">
+		<span class="badges">{{html site_img}}</span>
+		<span class="nick" style="color:#94a3b8;">Система:</span>
+		<span class="user_mess" style="color:#94a3b8;">{{html text}}</span>
+		<span class="timestamp">${timestamp}</span>
+	</div>
+</div>
+</script>
+
+</head>
+<body>
+
+<div class="phone-stage" id="stage">
+	<!-- 3D Idle Motion & Floating Container -->
+	<div class="phone-float-wrapper motion-floating is-floating" id="phone-float-wrapper">
+		<!-- Phone Outer Chassis -->
+		<div class="phone-frame frame-silver" id="phone-frame">
+		
+		<!-- 1. Android Hardware Buttons (Right Edge) -->
+		<div class="hardware-buttons buttons-android">
+			<div class="phone-button button-volume-up"></div>
+			<div class="phone-button button-volume-down"></div>
+			<div class="phone-button button-power"></div>
+		</div>
+
+		<!-- 2. iPhone Hardware Buttons (Left & Right Edges) -->
+		<div class="hardware-buttons buttons-iphone">
+			<div class="iphone-btn btn-action"></div>
+			<div class="iphone-btn btn-vol-up"></div>
+			<div class="iphone-btn btn-vol-down"></div>
+			<div class="iphone-btn btn-power"></div>
+		</div>
+
+		<!-- 3. Retro Keypad Top Header: Earpiece & Branding -->
+		<div class="symbian-top-header">
+			<div class="symbian-earpiece"></div>
+			<div class="symbian-brand">RUTONY</div>
+			<div class="symbian-front-cam"></div>
+		</div>
+
+		<!-- 4. Retro Brick Top Power Button, Header & Faceplate -->
+		<div class="nokia3310-power-btn"></div>
+		<div class="nokia3310-faceplate"></div>
+		<div class="nokia3310-top-header">
+			<div class="nokia3310-earpiece">
+				<span></span><span></span><span></span><span></span>
+			</div>
+			<div class="nokia3310-brand">RUTONY</div>
+		</div>
+
+		<!-- 5. 90s Beeper Pager Elements -->
+		<div class="pager-clip-bracket">
+			<div class="clip-spring"></div>
+			<div class="clip-label">BEEPER 90s</div>
+		</div>
+		<div class="pager-alert-led" id="pager-led" title="Alert LED">
+			<div class="led-core"></div>
+		</div>
+		<div class="pager-header-bar">
+			<div class="pager-brand-badge">
+				<span class="brand-moto">⚡</span>
+				<span class="brand-text" id="pager-brand-text">DIGITAL BEEPER</span>
+			</div>
+			<div class="pager-speaker-grill">
+				<span></span><span></span><span></span><span></span><span></span>
+			</div>
+		</div>
+		<div class="pager-side-ribs ribs-left"></div>
+		<div class="pager-side-ribs ribs-right"></div>
+
+		<!-- Inner Phone Screen -->
+		<div class="phone-screen" id="phone-screen">
+			<!-- Glass Glare Reflection -->
+			<div class="phone-glare"></div>
+
+			<!-- Left Neon Accent Line (Android) -->
+			<div class="phone-edge-accent"></div>
+
+			<!-- Status Bar: Android -->
+			<div class="status-bar status-android">
+				<div class="status-left">
+					<div class="status-signal" style="display:inline-flex; align-items:center; gap:2px; opacity:0.85;">
+						<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M2 17h3v4H2v-4zm5-4h3v8H7v-8zm5-4h3v12h-3V9zm5-4h3v16h-3V5z"/></svg>
+						<span style="font-size:10px; font-weight:700; margin-left:1px;">5G</span>
+					</div>
+					<div class="status-online-group" id="status-online-group" style="display:none; align-items:center; gap:6px; margin-left:6px;">
+						<div class="status-pill-kick"><span class="status-kick-badge">K</span><span id="kick-counter">0</span></div>
+						<div class="status-pill-yt"><span class="status-yt-badge">▶</span></div>
+						<div class="status-pill-users"><svg viewBox="0 0 24 24" width="12" height="12" fill="#ffffff" opacity="0.9"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg><span id="yt-counter">0</span></div>
+					</div>
+				</div>
+				<div class="status-center">
+					<div class="camera-punch"></div>
+				</div>
+				<div class="status-right">
+					<span class="status-clock">09:15</span>
+				</div>
+			</div>
+
+			<!-- Status Bar: iPhone with Dynamic Island -->
+			<div class="status-bar status-iphone">
+				<div class="ios-status-left">
+					<span class="status-clock">09:41</span>
+				</div>
+				<div class="dynamic-island" id="dynamic-island">
+					<div class="island-sensor"></div>
+					<div class="island-content">
+						<span style="font-size:12px;">💬</span>
+						<span id="island-text">Новое сообщение</span>
+					</div>
+					<div class="island-camera"></div>
+				</div>
+				<div class="ios-status-right">
+					<div class="ios-signal">
+						<div class="ios-bar bar-1"></div>
+						<div class="ios-bar bar-2"></div>
+						<div class="ios-bar bar-3"></div>
+						<div class="ios-bar bar-4"></div>
+					</div>
+					<span style="font-size:10.5px; margin-left:1px;">5G</span>
+					<div class="ios-battery">
+						<div class="ios-battery-level"></div>
+						<div class="ios-battery-cap"></div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Status Bar: Symbian S60 (Nokia) -->
+			<div class="status-bar status-symbian">
+				<div class="symbian-status-left">
+					<div class="symbian-signal-ladder">
+						<div class="sym-bar s1"></div>
+						<div class="sym-bar s2"></div>
+						<div class="sym-bar s3"></div>
+						<div class="sym-bar s4"></div>
+						<div class="sym-bar s5"></div>
+						<div class="sym-bar s6"></div>
+						<div class="sym-bar s7"></div>
+					</div>
+					<span class="symbian-operator">RUTONY 3G</span>
+				</div>
+				<div class="symbian-status-right">
+					<span class="status-clock">12:00</span>
+					<div class="symbian-battery-ladder">
+						<div class="sym-bbar b1"></div>
+						<div class="sym-bbar b2"></div>
+						<div class="sym-bbar b3"></div>
+						<div class="sym-bbar b4"></div>
+						<div class="sym-bbar b5"></div>
+						<div class="sym-bbar b6"></div>
+						<div class="sym-bbar b7"></div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Status Bar: Nokia 3310 (Monochrome LCD) -->
+			<div class="status-bar status-nokia3310">
+				<div class="nokia-status-left">
+					<div class="nokia-signal-ladder">
+						<span class="nokia-ant">▲</span>
+						<div class="nokia-bars">
+							<span class="nb b1"></span>
+							<span class="nb b2"></span>
+							<span class="nb b3"></span>
+							<span class="nb b4"></span>
+						</div>
+					</div>
+				</div>
+				<div class="nokia-status-center">
+					<span class="nokia-operator" id="nokia-operator">RUTONY</span>
+				</div>
+				<div class="nokia-status-right">
+					<div class="nokia-battery-ladder">
+						<div class="nokia-bbars">
+							<span class="n-bbar bb1"></span>
+							<span class="n-bbar bb2"></span>
+							<span class="n-bbar bb3"></span>
+							<span class="n-bbar bb4"></span>
+						</div>
+						<span class="nokia-bat-ico">■</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Status Bar: 90s Pager LCD -->
+			<div class="status-bar status-pager">
+				<div class="pager-lcd-status">
+					<div class="status-sec-left">
+						<span class="pager-msg-counter">[PAGE 01]</span>
+						<span class="status-ico">✉</span>
+						<span class="status-ico">📳</span>
+					</div>
+					<div class="status-sec-right">
+						<span class="status-ico">📶</span>
+						<span class="status-ico">🔋</span>
+						<span class="status-clock">17:45</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Dynamic Alert / Donation Push Notification Banner -->
+			<div class="phone-alert-banner" id="phone-alert-banner">
+				<div class="alert-banner-header">
+					<div class="alert-banner-title">
+						<span>🔔</span>
+						<span id="alert-banner-title-text">Оповещение</span>
+					</div>
+					<span style="font-size:10px; opacity:0.8;">сейчас</span>
+				</div>
+				<div class="alert-banner-body" id="alert-banner-body-text">
+					Спасибо за поддержку!
+				</div>
+			</div>
+
+			<!-- Chat Scroll Area -->
+			<div id="chat-wrapper">
+				<div id="content"></div>
+			</div>
+
+			<!-- Bottom Home Gesture: Android -->
+			<div class="phone-home-bar home-android">
+				<div class="home-indicator"></div>
+			</div>
+
+			<!-- Bottom Home Gesture: iPhone -->
+			<div class="phone-home-bar home-iphone">
+				<div class="ios-home-indicator"></div>
+			</div>
+
+			<!-- Symbian Softkeys Bar -->
+			<div class="symbian-softkeys-bar">
+				<span>Функции</span>
+				<span>Выход</span>
+			</div>
+
+			<!-- Nokia 3310 Softkeys Bar -->
+			<div class="nokia3310-softkeys-bar">
+				<span>Меню</span>
+				<span>Имена</span>
+			</div>
+
+			<!-- Pager Bottom Guide -->
+			<div class="pager-lcd-footer">
+				<span>SELECT [↵]</span>
+				<span style="letter-spacing:1px;">&lt; MESSAGE LOG &gt;</span>
+				<span>LIGHT [💡]</span>
+			</div>
+
+		</div>
+
+		<!-- Symbian Bottom Keypad & D-Pad Controls -->
+		<div class="symbian-keypad-panel">
+			<div class="symbian-keys-row">
+				<!-- Call Key (Green) -->
+				<div class="sym-key sym-key-call" title="Call">
+					<svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+				</div>
+
+				<!-- 5-Way D-Pad -->
+				<div class="symbian-dpad">
+					<div class="dpad-up">▲</div>
+					<div class="dpad-left">◀</div>
+					<div class="dpad-center">OK</div>
+					<div class="dpad-right">▶</div>
+					<div class="dpad-down">▼</div>
+				</div>
+
+				<!-- End Call Key (Red) -->
+				<div class="sym-key sym-key-end" title="End Call">
+					<svg viewBox="0 0 24 24"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.1-.7-.28-.79-.74-1.69-1.36-2.67-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg>
+				</div>
+			</div>
+
+			<!-- Subkeys: Menu & Clear -->
+			<div class="symbian-subkeys">
+				<div class="sym-btn-menu" title="Menu">
+					<svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+				</div>
+				<div class="sym-btn-clear" title="Clear">C</div>
+			</div>
+		</div>
+
+		<!-- 4. Nokia 3310 Iconic Keypad Panel -->
+		<div class="nokia3310-keypad-panel">
+			<!-- Upper Control Keys: Scroll, Navi, C -->
+			<div class="nokia3310-nav-row">
+				<div class="nokia3310-key key-scroll" title="Прокрутка">
+					<span class="arrow-up">▲</span>
+					<span class="arrow-down">▼</span>
+				</div>
+				<div class="nokia3310-key key-navi" title="Navi / Меню">
+					<div class="navi-groove"></div>
+				</div>
+				<div class="nokia3310-key key-c" title="Очистить / Назад">
+					<span>C</span>
+				</div>
+			</div>
+			<!-- 12-key Numeric Keypad -->
+			<div class="nokia3310-num-grid">
+				<div class="nokia-num-key"><span class="n-num">1</span><span class="n-sub">_o_</span></div>
+				<div class="nokia-num-key"><span class="n-num">2</span><span class="n-sub">abc</span></div>
+				<div class="nokia-num-key"><span class="n-num">3</span><span class="n-sub">def</span></div>
+				<div class="nokia-num-key"><span class="n-num">4</span><span class="n-sub">ghi</span></div>
+				<div class="nokia-num-key"><span class="n-num">5</span><span class="n-sub">jkl</span></div>
+				<div class="nokia-num-key"><span class="n-num">6</span><span class="n-sub">mno</span></div>
+				<div class="nokia-num-key"><span class="n-num">7</span><span class="n-sub">pqrs</span></div>
+				<div class="nokia-num-key"><span class="n-num">8</span><span class="n-sub">tuv</span></div>
+				<div class="nokia-num-key"><span class="n-num">9</span><span class="n-sub">wxyz</span></div>
+				<div class="nokia-num-key"><span class="n-num">*</span><span class="n-sub">+</span></div>
+				<div class="nokia-num-key"><span class="n-num">0</span><span class="n-sub">␣</span></div>
+				<div class="nokia-num-key"><span class="n-num">#</span><span class="n-sub">⇧</span></div>
+			</div>
+		</div>
+
+		<!-- 5. Pager Controls Panel -->
+		<div class="pager-controls-panel">
+			<div class="pager-btn btn-left" title="Назад (Left)"><span>◀</span></div>
+			<div class="pager-btn btn-read" title="Читать (Read/Select)"><div class="btn-read-inner">↵ READ</div></div>
+			<div class="pager-btn btn-light" title="Подсветка (Light)"><div class="btn-light-inner">💡 LIGHT</div></div>
+			<div class="pager-btn btn-right" title="Вперед (Right)"><span>▶</span></div>
+		</div>
+
+	</div>
+	</div>
+</div>
+
+</body>
+</html>
+
+
+
+
