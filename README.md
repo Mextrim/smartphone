@@ -5,10 +5,12 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/Mextrim/smartphone/releases/latest">
+    <img src="https://img.shields.io/github/v/release/Mextrim/smartphone?style=for-the-badge&logo=github&color=2EA44F&label=Download%20v1.0.0" alt="Download Release">
+  </a>
   <img src="https://img.shields.io/badge/RutonyChat-v2-0078D7?style=for-the-badge&logo=steam&logoColor=white" alt="RutonyChat v2">
   <img src="https://img.shields.io/badge/OBS_Studio-Compatible-6C3BAA?style=for-the-badge&logo=obsstudio&logoColor=white" alt="OBS Studio">
   <img src="https://img.shields.io/badge/Devices-5_in_1-FF6B00?style=for-the-badge" alt="5 Devices in 1">
-  <img src="https://img.shields.io/badge/License-MIT-2EA44F?style=for-the-badge" alt="License MIT">
 </p>
 
 ---
